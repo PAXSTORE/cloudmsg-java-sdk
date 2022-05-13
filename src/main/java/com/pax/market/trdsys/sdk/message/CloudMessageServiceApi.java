@@ -23,6 +23,7 @@ import com.pax.market.trdsys.sdk.base.utils.StringUtils;
 import com.pax.market.trdsys.sdk.message.dto.PushMessageCreateResultDto;
 import com.pax.market.trdsys.sdk.message.dto.QueryArriveRateDto;
 import com.pax.market.trdsys.sdk.message.request.MessageCreateRequest;
+import com.pax.market.trdsys.sdk.message.request.SingleTerminalMsgCreateReqeust;
 import com.pax.market.trdsys.sdk.message.response.BaseResponse;
 import com.pax.market.trdsys.sdk.message.result.Result;
 
@@ -42,6 +43,7 @@ import java.util.Set;
 public class CloudMessageServiceApi extends BaseApiClient{
 	
 	private static final String CREATE_PUSH_MESSAGE_URL = "/v1/3rd/cloudmsg";
+	private static final String CREATE_PUSH_MESSAGE_4_SINGLE_TERMINAL_URL = "/v1/3rd/cloudmsg/single";
 	private static final String QUERY_ARRIVE_RATE_RUL = "/v1/3rd/cloudmsg/{identifier}";
 	private static final int MAX_SERIAL_NUMS = 1000;
 	
@@ -72,12 +74,23 @@ public class CloudMessageServiceApi extends BaseApiClient{
 			
 			return new Result<PushMessageCreateResultDto>(validationErrors);
 		}
-//		String content = new Gson().toJson(createRequest.getContent(), MsgContent.class);
+
 		SdkRequest request = new SdkRequest(CREATE_PUSH_MESSAGE_URL);
 		request.setRequestMethod(RequestMethod.POST);
 		request.addHeader(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
-//		createRequest.setMsg(CryptoUtils.aesEncrypt(createRequest.getMsg(), apiSecret));
 		request.setRequestBody(new Gson().toJson(createRequest, MessageCreateRequest.class));
+		String resultJson = execute(request);
+		BaseResponse baseResponse = JsonUtils.fromJson(resultJson, BaseResponse.class);
+		PushMessageCreateResultDto dto = JsonUtils.fromJson(resultJson, PushMessageCreateResultDto.class);
+		Result<PushMessageCreateResultDto> result = new Result<PushMessageCreateResultDto>(baseResponse, dto);
+		return result;
+	}
+
+	public Result<PushMessageCreateResultDto> createPushMessageToSingleTerminal(SingleTerminalMsgCreateReqeust createRequest) {
+		SdkRequest request = new SdkRequest(CREATE_PUSH_MESSAGE_4_SINGLE_TERMINAL_URL);
+		request.setRequestMethod(RequestMethod.POST);
+		request.addHeader(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
+		request.setRequestBody(new Gson().toJson(createRequest, SingleTerminalMsgCreateReqeust.class));
 		String resultJson = execute(request);
 		BaseResponse baseResponse = JsonUtils.fromJson(resultJson, BaseResponse.class);
 		PushMessageCreateResultDto dto = JsonUtils.fromJson(resultJson, PushMessageCreateResultDto.class);
