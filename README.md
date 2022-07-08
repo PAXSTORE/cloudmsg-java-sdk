@@ -40,7 +40,7 @@ Update pom.xml add SDK dependency for maven project.
 <dependency>
     <groupId>com.whatspos.sdk</groupId>
     <artifactId>3rdsys-cloudmsg</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
 </dependency>
 ```
 
@@ -212,7 +212,27 @@ if(result.getData()!=null) {
 |2612|Message content is too long|&nbsp;|
 |2619|No valid serial numbers|Make sure the terminal has installed the app and the push channel has switched to cloud push channel|
 
+#### Send Message to Single Terminal
 
+##### API  
+```  
+public Result<PushMessageCreateResultDto> createPushMessageToSingleTerminal(SingleTerminalMsgCreateReqeust createRequest)
+```
+
+* Sample codes of sending notification type message to a terminal  
+
+```
+SingleTerminalMsgCreateReqeust request = new SingleTerminalMsgCreateReqeust();
+request.setMsgType(MsgType.Notification);
+MsgContent msgContent = new MsgContent();
+Notification notification = new Notification();
+notification.setTitle("This is title");
+notification.setContent("content");
+msgContent.setNotification(notification);
+request.setContent(msgContent);
+request.setSerialNo("1850000874");
+Result<PushMessageCreateResultDto> result = getMessageApi().createPushMessageToSingleTerminal(request);
+```
 
 #### Query the message arrived number
 
@@ -295,6 +315,9 @@ Please note this feature is supported by PAXSTORE version 7.4.0 or later.
 Support send message by terminal'sTID. To send message by TID please call the method *setSendByTid(true)* in the class *MessageCreateRequest* and call the method *setTids(String[] tids)* to set the TIDs.
 
 Please note this feature is supported by PAXSTORE version 8.1.0 or later.
+
+###b 1.3.0  
+Support send message to single terminal, and the max send rate is 120 times per minutes based on app key.
 
 
 

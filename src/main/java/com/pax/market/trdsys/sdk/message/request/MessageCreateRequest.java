@@ -13,7 +13,6 @@ package com.pax.market.trdsys.sdk.message.request;
 
 import com.pax.market.trdsys.sdk.message.MsgType;
 import com.pax.market.trdsys.sdk.message.dto.MsgContent;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 
