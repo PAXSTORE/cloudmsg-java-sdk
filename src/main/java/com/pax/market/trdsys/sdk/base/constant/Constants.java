@@ -56,24 +56,12 @@ public class Constants {
      * The constant CONTENT_ENCODING_GZIP.
      */
     public static final String CONTENT_ENCODING_GZIP = "gzip";
-    /**
-     * The constant PARAM_DATA.
-     */
-    public static final String PARAM_DATA = "data";
 
-    /**
-     * 默认媒体类型
-     */
-    public static final String MIME_TYPE_DEFAULT = "application/octet-stream";
     /**
      * The constant ACCESS_LANGUAGE.
      */
     public static final String ACCESS_LANGUAGE = "Accept-Language";
 
-    /**
-     * MD5签名方式
-     */
-    public static final String SIGN_METHOD_MD5 = "md5";
     /**
      * HMAC签名方式
      */
@@ -88,23 +76,9 @@ public class Constants {
      */
     public static final String CONTENT_TYPE_JSON = "application/json;charset=utf-8";
 
-    /**
-     * The constant REQ_HEADER_DOMAIN.
-     */
-    public static final String REQ_HEADER_DOMAIN = "X-Market-Domain";
-    /**
-     * The constant REQ_HEADER_SN.
-     */
-    public static final String REQ_HEADER_SN = "X-Terminal-SN";
-    /**
-     * The constant XML_FILE_PREFIX.
-     */
-    public static final String XML_FILE_PREFIX = "<?xml";
-    
-    public static final int DEFAULT_PAGE_SIZE = 10;
     
     public static final String THIRD_PARTY_API_SDK_LANGUAGE = "Java";
-    public static final String THIRD_PARTY_API_SDK_VERSION = "7.4";
+    public static final String THIRD_PARTY_API_SDK_VERSION = "1.4.0";
     public static final String REQ_HEADER_SDK_LANG = "SDK-Language";
     public static final String REQ_HEADER_SDK_VERSION = "SDK-Version";
 
