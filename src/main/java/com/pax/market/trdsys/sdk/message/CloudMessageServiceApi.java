@@ -23,6 +23,7 @@ import com.pax.market.trdsys.sdk.base.utils.StringUtils;
 import com.pax.market.trdsys.sdk.message.dto.PushMessageCreateResultDto;
 import com.pax.market.trdsys.sdk.message.dto.QueryArriveRateDto;
 import com.pax.market.trdsys.sdk.message.request.MessageCreateRequest;
+import com.pax.market.trdsys.sdk.message.request.SendMsgByTagRequest;
 import com.pax.market.trdsys.sdk.message.request.SingleTerminalMsgCreateReqeust;
 import com.pax.market.trdsys.sdk.message.response.BaseResponse;
 import com.pax.market.trdsys.sdk.message.result.Result;
@@ -44,6 +45,7 @@ public class CloudMessageServiceApi extends BaseApiClient{
 	
 	private static final String CREATE_PUSH_MESSAGE_URL = "/v1/3rd/cloudmsg";
 	private static final String CREATE_PUSH_MESSAGE_4_SINGLE_TERMINAL_URL = "/v1/3rd/cloudmsg/single";
+	private static final String CREATE_PUSH_MESSAGE_BY_TAG_URL = "/v1/3rd/cloudmsg/bytag";
 	private static final String QUERY_ARRIVE_RATE_RUL = "/v1/3rd/cloudmsg/{identifier}";
 	private static final int MAX_SERIAL_NUMS = 1000;
 	
@@ -97,7 +99,29 @@ public class CloudMessageServiceApi extends BaseApiClient{
 		Result<PushMessageCreateResultDto> result = new Result<PushMessageCreateResultDto>(baseResponse, dto);
 		return result;
 	}
-	
+
+	public Result<PushMessageCreateResultDto> createPushMessageByTag(SendMsgByTagRequest request) {
+		if(request == null) {
+			List<String> validationErrors = new ArrayList<String>();
+			validationErrors.add(MessageBoudleUtil.getMessage("parameter.request.mandatory"));
+			return new Result<PushMessageCreateResultDto>(validationErrors);
+		}
+		if(StringUtils.isEmpty(request.getTagName())) {
+			List<String> validationErrors = new ArrayList<String>();
+			validationErrors.add(MessageBoudleUtil.getMessage("tag.mandatory"));
+			return new Result<PushMessageCreateResultDto>(validationErrors);
+		}
+		SdkRequest httpRequest = new SdkRequest(CREATE_PUSH_MESSAGE_BY_TAG_URL);
+		httpRequest.setRequestMethod(RequestMethod.POST);
+		httpRequest.addHeader(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
+		httpRequest.setRequestBody(new Gson().toJson(request, SendMsgByTagRequest.class));
+		String resultJson = execute(httpRequest);
+		BaseResponse baseResponse = JsonUtils.fromJson(resultJson, BaseResponse.class);
+		PushMessageCreateResultDto dto = JsonUtils.fromJson(resultJson, PushMessageCreateResultDto.class);
+		Result<PushMessageCreateResultDto> result = new Result<PushMessageCreateResultDto>(baseResponse, dto);
+		return result;
+	}
+
 	public Result<QueryArriveRateDto> queryArriveRate(String messageIdentifier) {
 		List<String> validationErrors = new ArrayList<String>();
 		if(StringUtils.isEmpty(messageIdentifier)) {

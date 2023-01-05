@@ -40,7 +40,7 @@ Update pom.xml add SDK dependency for maven project.
 <dependency>
     <groupId>com.whatspos.sdk</groupId>
     <artifactId>3rdsys-cloudmsg</artifactId>
-    <version>1.3.0</version>
+    <version>1.4.0</version>
 </dependency>
 ```
 
@@ -197,7 +197,6 @@ if(result.getData()!=null) {
 > <font color=red>Parameter createRequest is mandatory!</font>  
 > <font color=red>Parameter serialNos's max size is 1000!</font>  
 
-
 **Possible business codes**
 
 |Business Code|Message|Description|
@@ -233,6 +232,36 @@ request.setContent(msgContent);
 request.setSerialNo("1850000874");
 Result<PushMessageCreateResultDto> result = getMessageApi().createPushMessageToSingleTerminal(request);
 ```
+
+
+
+#### Send Message to terminal(s) by tag
+
+##### API
+
+```
+public Result<PushMessageCreateResultDto> createPushMessageByTag(SendMsgByTagRequest request)
+```
+
+* Sample codes of sending notification type message to terminal(s) by tag  
+
+```
+SendMsgByTagRequest request = new SendMsgByTagRequest();
+request.setMsgType(MsgType.Notification);
+MsgContent msgContent = new MsgContent();
+Notification notification = new Notification();
+notification.setTitle("This is title of notification");
+notification.setContent("This is content of notification");
+msgContent.setNotification(notification);
+request.setContent(msgContent);
+request.setTagName("volvo");
+Result<PushMessageCreateResultDto> result = getMessageApi().createPushMessageByTag(request);
+```
+
+**Possible client validation errors**
+> <font color=red>Parameter request is mandatory!</font>  
+> <font color=red>Tag is mandatory!</font>  
+
 
 #### Query the message arrived number
 
@@ -316,8 +345,11 @@ Support send message by terminal'sTID. To send message by TID please call the me
 
 Please note this feature is supported by PAXSTORE version 8.1.0 or later.
 
-###b 1.3.0  
-Support send message to single terminal, and the max send rate is 120 times per minutes based on app key.
+### 1.3.0  
+Support send message to single terminal, and the max send rate is 120 times per minutes based on app key.  
+
+### 1.4.0  
+Support send message by tag
 
 
 
