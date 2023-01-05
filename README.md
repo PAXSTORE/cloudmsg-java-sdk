@@ -345,8 +345,11 @@ Support send message by terminal'sTID. To send message by TID please call the me
 
 Please note this feature is supported by PAXSTORE version 8.1.0 or later.
 
-###b 1.3.0  
-Support send message to single terminal, and the max send rate is 120 times per minutes based on app key.
+### 1.3.0  
+Support send message to single terminal, and the max send rate is 120 times per minutes based on app key.  
+
+### 1.4.0  
+Support send message by tag
 
 
 
