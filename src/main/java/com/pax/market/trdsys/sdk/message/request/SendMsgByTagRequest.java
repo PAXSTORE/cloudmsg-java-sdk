@@ -15,6 +15,8 @@ public class SendMsgByTagRequest implements Serializable {
 
     private MsgContent content;
 
+    private int effectiveDays = 1;
+
     public int getMsgType() {
         return msgType;
     }
@@ -37,5 +39,13 @@ public class SendMsgByTagRequest implements Serializable {
 
     public void setTagName(String tagName) {
         this.tagName = tagName;
+    }
+
+    public int getEffectiveDays() {
+        return effectiveDays;
+    }
+
+    public void setEffectiveDays(int effectiveDays) {
+        this.effectiveDays = effectiveDays;
     }
 }

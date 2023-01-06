@@ -132,6 +132,7 @@ After send message api will return the result, if the property businessCode of r
 ```  
 MessageCreateRequest request = new MessageCreateRequest();
 request.setMsgType(MsgType.Notification);
+request.setEffectiveDays(3);
 MsgContent msgContent = new MsgContent();
 Notification notification = new Notification();
 notification.setTitle("This is title of notification");
@@ -350,6 +351,9 @@ Support send message to single terminal, and the max send rate is 120 times per 
 
 ### 1.4.0  
 Support send message by tag
+
+### 1.5.0  
+Support specify the message effective days, the default value is 1 day, the valid value is 1 day or 3 days.
 
 
 
