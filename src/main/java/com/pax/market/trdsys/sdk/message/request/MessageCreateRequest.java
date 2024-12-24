@@ -41,9 +41,7 @@ public class MessageCreateRequest implements Serializable{
 
 	private boolean sendByTid = false;
 
-	public MessageCreateRequest() {
-
-	}
+	private int effectiveDays = 1;
 
 	public String[] getSerialNos() {
 		return serialNos;
@@ -92,5 +90,13 @@ public class MessageCreateRequest implements Serializable{
 
 	public void setSendByTid(boolean sendByTid) {
 		this.sendByTid = sendByTid;
+	}
+
+	public int getEffectiveDays() {
+		return effectiveDays;
+	}
+
+	public void setEffectiveDays(int effectiveDays) {
+		this.effectiveDays = effectiveDays;
 	}
 }

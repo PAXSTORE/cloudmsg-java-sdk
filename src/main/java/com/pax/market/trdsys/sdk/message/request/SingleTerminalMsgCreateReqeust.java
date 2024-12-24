@@ -19,6 +19,8 @@ public class SingleTerminalMsgCreateReqeust implements Serializable {
 
     private boolean sendByTid = false;
 
+    private int effectiveDays = 1;
+
     public int getMsgType() {
         return msgType;
     }
@@ -57,5 +59,13 @@ public class SingleTerminalMsgCreateReqeust implements Serializable {
 
     public void setSendByTid(boolean sendByTid) {
         this.sendByTid = sendByTid;
+    }
+
+    public int getEffectiveDays() {
+        return effectiveDays;
+    }
+
+    public void setEffectiveDays(int effectiveDays) {
+        this.effectiveDays = effectiveDays;
     }
 }
