@@ -40,7 +40,7 @@ Update pom.xml add SDK dependency for maven project.
 <dependency>
     <groupId>com.whatspos.sdk</groupId>
     <artifactId>3rdsys-cloudmsg</artifactId>
-    <version>1.4.0</version>
+    <version>1.5.0</version>
 </dependency>
 ```
 
