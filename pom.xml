@@ -42,16 +42,6 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
-        </dependency>
-	    <dependency>
-		    <groupId>org.glassfish.web</groupId>
-		    <artifactId>el-impl</artifactId>
-		    <version>${el-impl.version}</version>
-		</dependency>
 		<dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>

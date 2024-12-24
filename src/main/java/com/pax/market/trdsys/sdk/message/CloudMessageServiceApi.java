@@ -15,10 +15,10 @@ package com.pax.market.trdsys.sdk.message;
 import com.google.gson.Gson;
 import com.pax.market.trdsys.sdk.base.BaseApiClient;
 import com.pax.market.trdsys.sdk.base.constant.Constants;
+import com.pax.market.trdsys.sdk.base.constant.ErrorMessageMapping;
 import com.pax.market.trdsys.sdk.base.request.SdkRequest;
 import com.pax.market.trdsys.sdk.base.request.SdkRequest.RequestMethod;
 import com.pax.market.trdsys.sdk.base.utils.JsonUtils;
-import com.pax.market.trdsys.sdk.base.utils.MessageBoudleUtil;
 import com.pax.market.trdsys.sdk.base.utils.StringUtils;
 import com.pax.market.trdsys.sdk.message.dto.PushMessageCreateResultDto;
 import com.pax.market.trdsys.sdk.message.dto.QueryArriveRateDto;
@@ -28,13 +28,8 @@ import com.pax.market.trdsys.sdk.message.request.SingleTerminalMsgCreateReqeust;
 import com.pax.market.trdsys.sdk.message.response.BaseResponse;
 import com.pax.market.trdsys.sdk.message.result.Result;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  *
@@ -49,8 +44,6 @@ public class CloudMessageServiceApi extends BaseApiClient{
 	private static final String QUERY_ARRIVE_RATE_RUL = "/v1/3rd/cloudmsg/{identifier}";
 	private static final int MAX_SERIAL_NUMS = 1000;
 	
-	private static ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-	
 	public CloudMessageServiceApi(String baseUrl, String appKey, String apiSecret) {
 		super(baseUrl, appKey, apiSecret);
 	}
@@ -61,22 +54,22 @@ public class CloudMessageServiceApi extends BaseApiClient{
 	}
 	
 
-	
 	public Result<PushMessageCreateResultDto> createPushMessage(MessageCreateRequest createRequest) {
 		if(createRequest == null) {
 			List<String> validationErrors = new ArrayList<String>();
-			validationErrors.add(MessageBoudleUtil.getMessage("parameter.createRequest.mandatory"));
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.createRequest.mandatory"));
 			return new Result<PushMessageCreateResultDto>(validationErrors);
 		}
-		List<String> validationErrors = validate(createRequest);
-		if(validationErrors!=null && !validationErrors.isEmpty()) {
-			if(createRequest.getSerialNos()!=null && createRequest.getSerialNos().length>MAX_SERIAL_NUMS) {
-				validationErrors.add(MessageBoudleUtil.getMessage("parameter.sns.max.size"));
-			}
-			
+		List<String> validationErrors = new ArrayList<String>();
+		if(createRequest.getSerialNos()!=null && createRequest.getSerialNos().length>MAX_SERIAL_NUMS) {
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.sns.max.size"));
+		}
+		if(!validateEffectiveDay(createRequest.getEffectiveDays())) {
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.effectiveDays.invalid"));
+		}
+		if(!validationErrors.isEmpty()){
 			return new Result<PushMessageCreateResultDto>(validationErrors);
 		}
-
 		SdkRequest request = new SdkRequest(CREATE_PUSH_MESSAGE_URL);
 		request.setRequestMethod(RequestMethod.POST);
 		request.addHeader(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
@@ -89,6 +82,17 @@ public class CloudMessageServiceApi extends BaseApiClient{
 	}
 
 	public Result<PushMessageCreateResultDto> createPushMessageToSingleTerminal(SingleTerminalMsgCreateReqeust createRequest) {
+		List<String> validationErrors = new ArrayList<String>();
+		if(createRequest == null) {
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.createRequest.mandatory"));
+			return new Result<PushMessageCreateResultDto>(validationErrors);
+		}
+		if(!validateEffectiveDay(createRequest.getEffectiveDays())) {
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.effectiveDays.invalid"));
+		}
+		if(!validationErrors.isEmpty()){
+			return new Result<PushMessageCreateResultDto>(validationErrors);
+		}
 		SdkRequest request = new SdkRequest(CREATE_PUSH_MESSAGE_4_SINGLE_TERMINAL_URL);
 		request.setRequestMethod(RequestMethod.POST);
 		request.addHeader(Constants.CONTENT_TYPE, Constants.CONTENT_TYPE_JSON);
@@ -103,12 +107,18 @@ public class CloudMessageServiceApi extends BaseApiClient{
 	public Result<PushMessageCreateResultDto> createPushMessageByTag(SendMsgByTagRequest request) {
 		if(request == null) {
 			List<String> validationErrors = new ArrayList<String>();
-			validationErrors.add(MessageBoudleUtil.getMessage("parameter.request.mandatory"));
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.request.mandatory"));
 			return new Result<PushMessageCreateResultDto>(validationErrors);
 		}
+		List<String> validationErrors = new ArrayList<String>();
 		if(StringUtils.isEmpty(request.getTagName())) {
-			List<String> validationErrors = new ArrayList<String>();
-			validationErrors.add(MessageBoudleUtil.getMessage("tag.mandatory"));
+			validationErrors.add(ErrorMessageMapping.getMsg("tag.mandatory"));
+			return new Result<PushMessageCreateResultDto>(validationErrors);
+		}
+		if(!validateEffectiveDay(request.getEffectiveDays())) {
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.effectiveDays.invalid"));
+		}
+		if(!validationErrors.isEmpty()){
 			return new Result<PushMessageCreateResultDto>(validationErrors);
 		}
 		SdkRequest httpRequest = new SdkRequest(CREATE_PUSH_MESSAGE_BY_TAG_URL);
@@ -125,11 +135,11 @@ public class CloudMessageServiceApi extends BaseApiClient{
 	public Result<QueryArriveRateDto> queryArriveRate(String messageIdentifier) {
 		List<String> validationErrors = new ArrayList<String>();
 		if(StringUtils.isEmpty(messageIdentifier)) {
-			validationErrors.add(MessageBoudleUtil.getMessage("parameter.identifier.mandatory"));
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.identifier.mandatory"));
 			return new Result<QueryArriveRateDto>(validationErrors);
 		}
 		if(messageIdentifier.trim().length()!=32) {
-			validationErrors.add(MessageBoudleUtil.getMessage("parameter.identifier.length"));
+			validationErrors.add(ErrorMessageMapping.getMsg("parameter.identifier.length"));
 			return new Result<QueryArriveRateDto>(validationErrors);
 		}
 		SdkRequest request = new SdkRequest(QUERY_ARRIVE_RATE_RUL.replace("{identifier}", messageIdentifier));
@@ -140,15 +150,13 @@ public class CloudMessageServiceApi extends BaseApiClient{
 		QueryArriveRateDto dto = JsonUtils.fromJson(resultJson, QueryArriveRateDto.class);
 		return new Result<QueryArriveRateDto>(baseResponse, dto);
 	}
-	
-	protected static <T> List<String> validate(T t) {
-        Validator validator = factory.getValidator();
-        Set<ConstraintViolation<T>> constraintViolations = validator.validate(t);
-        List<String> messageList = new ArrayList<String>();
-        for (ConstraintViolation<T> constraintViolation : constraintViolations) {
-            messageList.add(constraintViolation.getPropertyPath().toString()+":"+constraintViolation.getMessage());
-        }
-        return messageList;
-    }
+
+	private boolean validateEffectiveDay(int effectiveDay) {
+		if(effectiveDay != 1 || effectiveDay != 3 || effectiveDay !=5) {
+			return false;
+		}else{
+			return true;
+		}
+	}
 
 }

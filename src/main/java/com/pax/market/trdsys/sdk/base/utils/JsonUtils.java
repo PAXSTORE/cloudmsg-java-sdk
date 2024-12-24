@@ -12,12 +12,12 @@
 package com.pax.market.trdsys.sdk.base.utils;
 
 import com.google.gson.Gson;
+import com.pax.market.trdsys.sdk.base.constant.ErrorMessageMapping;
 import com.pax.market.trdsys.sdk.base.constant.ResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -119,7 +119,7 @@ public class JsonUtils {
                 break;
 
         }
-        message = MessageBoudleUtil.getMessage(message, Locale.getDefault());
+        message = ErrorMessageMapping.getMsg(message);
         return getSdkJson(resultCode, message);
     }
 
