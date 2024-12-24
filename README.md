@@ -353,7 +353,10 @@ Support send message to single terminal, and the max send rate is 120 times per 
 Support send message by tag
 
 ### 1.5.0  
-Support specify the message effective days, the default value is 1 day, the valid value is 1 day or 3 days.
+Support specify the message effective days, the default value is 1 day, the valid value is 1 day or 3 days.  
+
+### 1.6.0  
+Effective days of message supports 5 days. This feature only supported by remote API version 9.7.0.
 
 
 
