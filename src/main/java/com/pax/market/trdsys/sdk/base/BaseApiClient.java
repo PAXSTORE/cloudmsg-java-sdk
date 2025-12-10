@@ -96,22 +96,6 @@ public class BaseApiClient {
 		this.readTimeout = readTimeout;
 	}
 
-    /**
-     * Instantiates a new Default client.
-     *
-     * @param baseUrl        the base url
-     * @param appKey         the app key
-     * @param appSecret      the app secret
-     * @param connectTimeout the connect timeout
-     * @param readTimeout    the read timeout
-     * @param signMethod     the sign method
-     */
-    public BaseApiClient(String baseUrl, String appKey, String appSecret, int connectTimeout, int readTimeout, String signMethod) {
-		this(baseUrl, appKey, appSecret, connectTimeout, readTimeout);
-		this.signMethod = signMethod;
-	}
-    
-    
 
     /**
      * Execute string.
@@ -125,9 +109,9 @@ public class BaseApiClient {
 		try {
 			return _execute(request);
 		} catch (IOException e) {
-			logger.error("IOException occurred when execute request. Details: {}", e.toString());
+			logger.error("IOException occurred when execute request", e);
 		} catch (GeneralSecurityException e) {
-			logger.error("GeneralSecurityException occurred when execute request. Details: {}", e.toString());
+			logger.error("GeneralSecurityException occurred when execute request.", e);
 		}
 		return JsonUtils.getSdkJson(ResultCode.SDK_RQUEST_EXCEPTION);
 	}
@@ -146,12 +130,7 @@ public class BaseApiClient {
 		}
 		String requestUrl = HttpUtils.buildRequestUrl(baseUrl + request.getRequestMappingUrl(), query);
 		logger.info(" --> {} {}", request.getRequestMethod().getValue(), requestUrl);
-
-		if(!request.isCompressData()){
-			response = HttpUtils.request(requestUrl, request.getRequestMethod().getValue(), connectTimeout, readTimeout, request.getRequestBody(), request.getHeaderMap(), request.getSaveFilePath());
-		} else {
-			response = HttpUtils.compressRequest(requestUrl, request.getRequestMethod().getValue(), connectTimeout, readTimeout, request.getRequestBody(), request.getHeaderMap(), request.getSaveFilePath());
-		}
+		response = HttpUtils.request(requestUrl, request.getRequestMethod().getValue(), connectTimeout, readTimeout, request.getRequestBody(), request.getHeaderMap());
 		return response;
 	}
 

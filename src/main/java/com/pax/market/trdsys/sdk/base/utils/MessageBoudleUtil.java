@@ -11,10 +11,12 @@
  */
 package com.pax.market.trdsys.sdk.base.utils;
 
-import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
-import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
 
 /**
  *
@@ -22,16 +24,29 @@ import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
  * @date 2018-07-04
  */
 public class MessageBoudleUtil {
-	public static PlatformResourceBundleLocator prbl=new PlatformResourceBundleLocator( "ValidationMessages" );
+
+	private static final String BASE_NAME = "ValidationMessages";
+	private static final Logger logger = LoggerFactory.getLogger(MessageBoudleUtil.class);
 	
 	public static String getMessage(String key) {
-		ResourceBundle rb=prbl.getResourceBundle(Locale.ENGLISH);
-		return rb.getString(key);
+		return getMessage(key, null);
 	}
-	
-	public static String getMessage(String key, Locale locale) {
-		ResourceBundle rb=prbl.getResourceBundle(locale);
-		return rb.getString(key);
+
+	public static String getMessage(String key, String... args) {
+		ResourceBundle rb = ResourceBundle.getBundle(BASE_NAME);
+		try {
+			return loadArgs(rb.getString(key),  args);
+		} catch (Exception mre) {
+			logger.warn(mre.getMessage());
+			return key;
+		}
+	}
+
+	private static String loadArgs(String message, Object[] args){
+		if (!StringUtils.isEmpty(message) && args != null){
+			return  MessageFormat.format(message, args);
+		}
+		return message;
 	}
 
 }

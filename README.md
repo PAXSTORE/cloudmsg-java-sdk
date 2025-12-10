@@ -40,7 +40,7 @@ Update pom.xml add SDK dependency for maven project.
 <dependency>
     <groupId>com.whatspos.sdk</groupId>
     <artifactId>3rdsys-cloudmsg</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
 </dependency>
 ```
 
@@ -233,7 +233,34 @@ request.setContent(msgContent);
 request.setSerialNo("1850000874");
 Result<PushMessageCreateResultDto> result = getMessageApi().createPushMessageToSingleTerminal(request);
 ```
+#### Send Data Type Message to Single Terminal  
 
+##### API  
+```
+public Result<PushMessageCreateResultDto> sendRapidMessage(SendRapidMessageRequest request)
+```  
+
+* Sample codes of sending data type message to single terminal
+
+```
+SendRapidMessageRequest request = new SendRapidMessageRequest();
+request.setSerialNo("0820534806");
+JSONObject content = new JSONObject();
+content.put("transactionIdl", "123456789");
+content.put("billingAddress", "Jiangsu Suzhou SIP Park B205");
+content.put("amount", 1024);
+content.put("quantity", 10);
+request.setContent(content);
+Result<PushMessageCreateResultDto> result = getMessageApi().sendRapidMessage(request);
+```
+**Possible client validation errors**
+> <font color=red>Parameter request is mandatory!</font>  
+> <font color=red>Parameter serialNo is mandatory!</font>  
+> <font color=red>Parameter content is mandatory!</font>  
+> <font color=red>Message content cannot greater than 1024 byte!</font>  
+
+##### Description
+This API will send data type message to terminal. The default API limit for this API is 500 per minute. The message content length is 1024 byte. 
 
 
 #### Send Message to terminal(s) by tag
@@ -354,6 +381,9 @@ Support send message by tag
 
 ### 1.5.0  
 Support specify the message effective days, the default value is 1 day, the valid value is 1 day or 3 days.
+
+### 1.6.0
+Add new API to send data type message to single terminal. The default API rate limit for this new API is 500 per minute.
 
 
 

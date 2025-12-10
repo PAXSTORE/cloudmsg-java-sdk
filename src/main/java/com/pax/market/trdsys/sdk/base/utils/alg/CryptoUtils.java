@@ -15,14 +15,10 @@ package com.pax.market.trdsys.sdk.base.utils.alg;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Map;
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import com.pax.market.trdsys.sdk.base.utils.StringUtils;
@@ -33,28 +29,12 @@ import com.pax.market.trdsys.sdk.base.utils.StringUtils;
  */
 public class CryptoUtils {
 
-    /**
-     * TOP默认时间格式
-     */
-    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * UTF-8字符集
      */
     public static final String CHARSET_UTF8 = "UTF-8";
 
-    private static final String AES = "AES";
-    private static final String AES_CBC = "AES/CBC/PKCS5Padding";
-    /**
-     * The constant DEFAULT_IV_SIZE.
-     */
-    public static final int DEFAULT_IV_SIZE = 16;
-    private static SecureRandom random = new SecureRandom();
-
-    /**
-     * MD5签名方式
-     */
-    public static final String SIGN_METHOD_MD5 = "md5";
     /**
      * HMAC签名方式
      */
@@ -213,235 +193,4 @@ public class CryptoUtils {
         return sign.toString();
     }
 
-    /**
-     * Hex str 2 bytes byte [ ].
-     *
-     * @param hexstr the hexstr
-     * @return the byte [ ]
-     */
-    public static byte[] hexStr2Bytes(String hexstr) {
-        if(hexstr == null) return null;
-        byte[] b = new byte[hexstr.length() / 2];
-        int j = 0;
-        for (int i = 0; i < b.length; i++) {
-            char c0 = hexstr.charAt(j++);
-            char c1 = hexstr.charAt(j++);
-            b[i] = (byte) ((parse(c0) << 4) | parse(c1));
-        }
-        return b;
-    }
-
-    private static int parse(char c) {
-        if (c >= 'a')
-            return (c - 'a' + 10) & 0x0f;
-        if (c >= 'A')
-            return (c - 'A' + 10) & 0x0f;
-        return (c - '0') & 0x0f;
-    }
-
-    /**
-     * 使用AES加密原始字符串.
-     *
-     * @param input  加密内容
-     * @param secret 加密密钥
-     * @return base64 encoded string
-     */
-    public static String aesEncrypt(String input, String secret) {
-        byte[] secretBytes = AlgHelper.hexStringToBytes(secret);
-        byte[] secretKey = KeyUtils.genSecretKey(secretBytes);
-        String result = null;
-        try {
-            result = bytesToHexString(aesEncrypt(input.getBytes(CHARSET_UTF8), secretKey));
-        } catch (Exception e) {
-
-        }
-        return result;
-    }
-
-    /**
-     * 使用AES加密原始字符串.
-     *
-     * @param input 原始输入字符数组
-     * @param key   符合AES要求的密钥
-     * @return the byte [ ]
-     */
-    public static byte[] aesEncrypt(byte[] input, byte[] key) {
-        return aes(input, key, Cipher.ENCRYPT_MODE);
-    }
-
-    /**
-     * 使用AES加密原始字符串.
-     *
-     * @param input 原始输入字符数组
-     * @param key   符合AES要求的密钥
-     * @param iv    初始向量
-     * @return the byte [ ]
-     */
-    public static byte[] aesEncrypt(byte[] input, byte[] key, byte[] iv) {
-        return aes(input, key, iv, Cipher.ENCRYPT_MODE);
-    }
-
-    /**
-     * 使用AES解密字符串, 返回原始字符串.
-     *
-     * @param input  解密内容
-     * @param secret 解密密钥
-     * @return base64 encoded string
-     */
-    public static String aesDecrypt(String input, String secret) {
-        byte[] secretBytes = AlgHelper.hexStringToBytes(secret);
-        byte[] secretKey = KeyUtils.genSecretKey(secretBytes);
-
-        String result = null;
-        try {
-            result = new String(aesDecrypt(hexStringToBytes(input), secretKey), CHARSET_UTF8);
-        } catch (Exception e) {
-
-        }
-        return result;
-    }
-
-    /**
-     * 使用AES解密字符串, 返回原始字符串.
-     *
-     * @param input base64编码的加密字符串
-     * @param key   符合AES要求的密钥
-     * @return the byte [ ]
-     */
-    public static byte[] aesDecrypt(byte[] input, byte[] key) {
-        return aes(input, key, Cipher.DECRYPT_MODE);
-    }
-
-    /**
-     * 使用AES解密字符串, 返回原始字符串.
-     *
-     * @param input base64编码的加密字符串
-     * @param key   符合AES要求的密钥
-     * @param iv    初始向量
-     * @return the byte [ ]
-     */
-    public static byte[] aesDecrypt(byte[] input, byte[] key, byte[] iv) {
-        return aes(input, key, iv, Cipher.DECRYPT_MODE);
-    }
-
-    /**
-     * 使用AES加密或解密无编码的原始字节数组, 返回无编码的字节数组结果.
-     *
-     * @param input 原始字节数组
-     * @param key   符合AES要求的密钥
-     * @param mode  Cipher.ENCRYPT_MODE 或 Cipher.DECRYPT_MODE
-     */
-    private static byte[] aes(byte[] input, byte[] key, int mode) {
-        try {
-            SecretKey secretKey = new SecretKeySpec(key, AES);
-            Cipher cipher = Cipher.getInstance(AES);
-            cipher.init(mode, secretKey);
-            return cipher.doFinal(input);
-        } catch (GeneralSecurityException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 使用AES加密或解密无编码的原始字节数组, 返回无编码的字节数组结果.
-     *
-     * @param input 原始字节数组
-     * @param key   符合AES要求的密钥
-     * @param iv    初始向量
-     * @param mode  Cipher.ENCRYPT_MODE 或 Cipher.DECRYPT_MODE
-     */
-    private static byte[] aes(byte[] input, byte[] key, byte[] iv, int mode) {
-        try {
-            SecretKey secretKey = new SecretKeySpec(key, AES);
-            IvParameterSpec ivSpec = new IvParameterSpec(iv);
-            Cipher cipher = Cipher.getInstance(AES_CBC);
-            cipher.init(mode, secretKey, ivSpec);
-            return cipher.doFinal(input);
-        } catch (GeneralSecurityException e) {
-            return null;
-        }
-    }
-
-
-    /**
-     * 生成AES密钥,可选长度为128,192,256位.
-     *
-     * @param keysize the keysize
-     * @return the byte [ ]
-     */
-    public static byte[] generateAesKey(int keysize) {
-        try {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(AES);
-            keyGenerator.init(keysize);
-            SecretKey secretKey = keyGenerator.generateKey();
-            return secretKey.getEncoded();
-        } catch (GeneralSecurityException e) {
-            return null;
-        }
-    }
-
-    /**
-     * 生成随机向量,默认大小为cipher.getBlockSize(), 16字节.
-     *
-     * @return the byte [ ]
-     */
-    public static byte[] generateIV() {
-        byte[] bytes = new byte[DEFAULT_IV_SIZE];
-        random.nextBytes(bytes);
-        return bytes;
-    }
-
-    /**
-     * Bytes to hex string string.
-     *
-     * @param paramArrayOfByte the param array of byte
-     * @return the string
-     */
-    public static String bytesToHexString(byte[] paramArrayOfByte) {
-        StringBuilder localStringBuilder = new StringBuilder();
-        if ((paramArrayOfByte == null) || (paramArrayOfByte.length <= 0)) {
-            return null;
-        }
-        for (int i = 0; i < paramArrayOfByte.length; i++) {
-            int j = paramArrayOfByte[i] & 0xFF;
-            String str = Integer.toHexString(j);
-            if (str.length() < 2) {
-                localStringBuilder.append(0);
-            }
-            localStringBuilder.append(str);
-        }
-        return localStringBuilder.toString();
-    }
-
-    /**
-     * Hex string to bytes byte [ ].
-     *
-     * @param paramString the param string
-     * @return the byte [ ]
-     */
-    public static byte[] hexStringToBytes(String paramString) {
-        paramString = paramString.toUpperCase();
-        if ((paramString == null) || (paramString.equals(""))) {
-            return null;
-        }
-        paramString = paramString.toUpperCase();
-        int i = paramString.length() / 2;
-        char[] arrayOfChar = paramString.toCharArray();
-        byte[] arrayOfByte = new byte[i];
-        for (int j = 0; j < i; j++) {
-            int k = j * 2;
-            arrayOfByte[j] = ((byte) (charToByte(arrayOfChar[k]) << 4 | (charToByte(arrayOfChar[(k + 1)]) & 0xff)));
-        }
-        return arrayOfByte;
-    }
-
-    /**
-     * Char to byte byte.
-     *
-     * @param paramChar the param char
-     * @return the byte
-     */
-    public static byte charToByte(char paramChar) {
-        return (byte) "0123456789ABCDEF".indexOf(paramChar);
-    }
 }

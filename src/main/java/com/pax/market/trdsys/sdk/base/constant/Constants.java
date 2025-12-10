@@ -45,22 +45,10 @@ public class Constants {
     public static final String CHARSET_UTF8 = "UTF-8";
 
     /**
-     * 响应编码
-     */
-    public static final String ACCEPT_ENCODING = "Accept-Encoding";
-    /**
-     * The constant CONTENT_ENCODING.
-     */
-    public static final String CONTENT_ENCODING = "Content-Encoding";
-    /**
      * The constant CONTENT_ENCODING_GZIP.
      */
     public static final String CONTENT_ENCODING_GZIP = "gzip";
 
-    /**
-     * The constant ACCESS_LANGUAGE.
-     */
-    public static final String ACCESS_LANGUAGE = "Accept-Language";
 
     /**
      * HMAC签名方式
@@ -78,7 +66,7 @@ public class Constants {
 
     
     public static final String THIRD_PARTY_API_SDK_LANGUAGE = "Java";
-    public static final String THIRD_PARTY_API_SDK_VERSION = "1.4.0";
+    public static final String THIRD_PARTY_API_SDK_VERSION = "1.6.0";
     public static final String REQ_HEADER_SDK_LANG = "SDK-Language";
     public static final String REQ_HEADER_SDK_VERSION = "SDK-Version";
 

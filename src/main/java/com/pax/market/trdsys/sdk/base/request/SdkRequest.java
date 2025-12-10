@@ -49,14 +49,6 @@ public class SdkRequest {
      * The Request body.
      */
     protected String requestBody;                                   // Request body json string
-    /**
-     * The Save file path.
-     */
-    protected String saveFilePath;                                  // 文件保存路径
-    /**
-     * The Compress data.
-     */
-    protected boolean compressData = false;                         // 是否压缩数据
 
     /**
      * Instantiates a new Sdk request.
@@ -250,41 +242,5 @@ public class SdkRequest {
         public String getValue() {
             return value;
         }
-    }
-
-    /**
-     * Gets save file path.
-     *
-     * @return the save file path
-     */
-    public String getSaveFilePath() {
-        return saveFilePath;
-    }
-
-    /**
-     * Sets save file path.
-     *
-     * @param saveFilePath the save file path
-     */
-    public void setSaveFilePath(String saveFilePath) {
-        this.saveFilePath = saveFilePath;
-    }
-
-    /**
-     * Is compress data boolean.
-     *
-     * @return the boolean
-     */
-    public boolean isCompressData() {
-        return compressData;
-    }
-
-    /**
-     * Sets compress data.
-     *
-     * @param compressData the compress data
-     */
-    public void setCompressData(boolean compressData) {
-        this.compressData = compressData;
     }
 }

@@ -119,7 +119,7 @@ public class JsonUtils {
                 break;
 
         }
-        message = MessageBoudleUtil.getMessage(message, Locale.getDefault());
+        message = MessageBoudleUtil.getMessage(message);
         return getSdkJson(resultCode, message);
     }
 

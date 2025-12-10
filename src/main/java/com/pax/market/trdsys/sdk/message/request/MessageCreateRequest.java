@@ -23,9 +23,6 @@ import java.io.Serializable;
  */
 public class MessageCreateRequest implements Serializable{
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 81643576327525513L;
 
 	private int msgType;
