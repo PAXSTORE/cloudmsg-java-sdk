@@ -48,7 +48,7 @@ Update pom.xml add SDK dependency for maven project.
 
 Initialize the API using the constructor like this.  
 ```
-CloudMessageServiceApi api = new CloudMessageServiceApi("https://api.whatspos.com/p-market-api", "appkey", "appsecret");
+CloudMessageServiceApi api = new CloudMessageServiceApi("https://api.whatspos.com/p-market-push", "appkey", "appsecret");
 ```
 Please use the correct app key and secret.
 
